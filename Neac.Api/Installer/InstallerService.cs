@@ -23,11 +23,11 @@ namespace Neac.Api.Installer
         {
             // add dbcontext
             services.AddHttpContextAccessor();
-            services.AddDbContext<NeacDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("NeacContext")));
-            // add cache service
+            services.AddDbContext<NeacDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("NeacDbContext")));
+            //add cache service
             services.AddMemoryCache();
 
-            // add authen
+            //add authen
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -51,7 +51,7 @@ namespace Neac.Api.Installer
             });
 
             // add base service
-            services.AddScoped<Func<NeacDbContext>>((provider) => () => provider.GetService<NeacDbContext>());
+            services.AddTransient<Func<NeacDbContext>>((provider) => () => provider.GetService<NeacDbContext>());
             services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));

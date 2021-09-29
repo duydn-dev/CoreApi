@@ -44,9 +44,9 @@ namespace Neac.Api.Controllers
             return new Response<bool>(true, 200, "ok", true);
         }
 
-        [AllowAnonymous]
         [Route("login")]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<Response<string>> Login([FromBody] UserLoginDto request)
         {
             return await _userRepository.Login(request);
