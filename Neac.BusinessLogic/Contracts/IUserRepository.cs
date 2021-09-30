@@ -12,5 +12,11 @@ namespace Neac.BusinessLogic.Contracts
     {
         Task<Response<string>> Login(UserLoginDto request);
         Task<Response<User>> GetUserByUserName(string userName);
+        Task<Response<GetListResponseModel<List<UserCreateDto>>>> GetListUser(GetListUserRequestDto request);
+        Task<Response<UserCreateDto>> Create(UserCreateDto request);
+        Task<Response<UserCreateDto>> Update(UserCreateDto request);
+        Task<Response<bool>> Delete(Guid userId);
+        Task<Response<bool>> DeleteMany(List<Guid> userId);
+        Task<UserCreateDto> GetIdentityUser();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Neac.Common.Dtos;
 using Neac.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace Neac.BusinessLogic.Config
     {
         public AutoMapperConfig()
         {
+            CreateMap<UserCreateDto, User>().ForMember(x => x.UserRoles, g => g.Ignore());
+            CreateMap<User, UserCreateDto>();
         }
     }
 }

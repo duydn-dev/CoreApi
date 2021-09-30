@@ -8,7 +8,6 @@ namespace Neac.Common.Const
 {
     public static class CommonConstant
     {
-        public const string ConnectionString = "Data Source=DESKTOP-V64DOTK;Initial Catalog=CoreDb;Integrated Security=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
     }
     public static class UserStatus
     {

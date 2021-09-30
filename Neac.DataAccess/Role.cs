@@ -15,6 +15,10 @@ namespace Neac.DataAccess
         public Guid RoleId { get; set; }
         public string RoleName {get;set;}
         public string RoleCode { get; set; }
+        public Guid? CreatedBy { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public Guid? ModifiedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
         public IList<UserRole> UserRoles { get; set; }
     }
