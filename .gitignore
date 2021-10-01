@@ -20,3 +20,4 @@ Neac.BusinessLogic/obj/Debug/net5.0/Neac.BusinessLogic.csprojAssemblyReference.c
 /Neac/.vs/Neac/config/applicationhost.config
 /Neac/.config
 /ClientApp/client-app/node_modules/**
+/Neac.Api/.vs/Neac.Api/v16/**

@@ -5,6 +5,7 @@ using Neac.Api.Attributes;
 using Neac.BusinessLogic.Contracts;
 using Neac.Common.Dtos;
 using Neac.DataAccess;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,32 +25,64 @@ namespace Neac.Api.Controllers
             _userRepository = userRepository;
         }
 
-        [RoleDescription("Cập nhật danh sách quyền")]
-        [Route("update-role")]
-        [HttpPost]
-        public async Task<Response<bool>> UpdateRole()
-        {
-            Assembly asm = Assembly.GetExecutingAssembly();
-            var controlleractionlist = asm.GetTypes()
-                    .Where(type => typeof(ControllerBase).IsAssignableFrom(type))
-                    .SelectMany(type => type.GetMethods(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
-                    .Where(m => !m.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), true).Any())
-                    .Where(m => !m.CustomAttributes.Any(n => n.AttributeType == typeof(AllowAnonymousAttribute)))
-                    .Select(x => new Role {
-                        RoleCode = x.DeclaringType.Name.Replace("Controller","") + "-" + x.Name,
-                        RoleId = Guid.Empty,
-                        RoleName = ((RoleDescriptionAttribute)x.GetCustomAttribute(typeof(RoleDescriptionAttribute)))?.Description
-                    })
-                    .OrderBy(x => x.RoleCode).ToList();
-            return new Response<bool>(true, 200, "ok", true);
-        }
-
         [Route("login")]
         [HttpPost]
         [AllowAnonymous]
         public async Task<Response<string>> Login([FromBody] UserLoginDto request)
         {
             return await _userRepository.Login(request);
+        }
+
+        [Route("register")]
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<Response<UserCreateDto>> Register([FromBody] UserCreateDto request)
+        {
+            request.UserId = Guid.NewGuid();
+            request.CreatedBy = request.UserId;
+            return await _userRepository.Create(request);
+        }
+
+        [RoleDescription("Xem danh sách tài khoản")]
+        [Route("")]
+        [HttpGet]
+        public async Task<Response<GetListResponseModel<List<UserCreateDto>>>> GetFilter(string request)
+        {
+            var req = JsonConvert.DeserializeObject<GetListUserRequestDto>(request);
+            return await _userRepository.GetListUser(req);
+        }
+
+        [RoleDescription("Thêm mới tài khoản")]
+        [Route("create")]
+        [HttpPost]
+        public async Task<Response<UserCreateDto>> Create([FromBody] UserCreateDto request)
+        {
+            return await _userRepository.Create(request);
+        }
+
+        [RoleDescription("Cập nhật tài khoản")]
+        [Route("update/{userId}")]
+        [HttpPut]
+        public async Task<Response<UserCreateDto>> Update(Guid userId, [FromBody] UserCreateDto request)
+        {
+            request.UserId = userId;
+            return await _userRepository.Update(request);
+        }
+
+        [RoleDescription("Xóa tài khoản")]
+        [Route("delete/{userId}")]
+        [HttpDelete]
+        public async Task<Response<bool>> Delete(Guid userId)
+        {
+            return await _userRepository.Delete(userId);
+        }
+
+        [RoleDescription("Xóa nhiều tài khoản")]
+        [Route("delete")]
+        [HttpDelete]
+        public async Task<Response<bool>> Delete([FromQuery]List<Guid> userIds)
+        {
+            return await _userRepository.DeleteMany(userIds);
         }
     }
 }

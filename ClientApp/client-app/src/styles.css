@@ -1,1 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face {
+    font-family: sarabun;
+    src: url(./assets/fonts/Sarabun-Medium.ttf);
+  }
+html, body{
+    font-family: sarabun;
+}

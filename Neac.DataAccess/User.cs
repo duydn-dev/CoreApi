@@ -26,5 +26,10 @@ namespace Neac.DataAccess
         public int? Status { get; set; }
 
         public IList<UserRole> UserRoles { get; set; }
+
+        public User()
+        {
+            UserRoles = new List<UserRole>();
+        }
     }
 }

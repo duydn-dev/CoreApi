@@ -13,60 +13,43 @@ using System.Threading.Tasks;
 
 namespace Neac.Api.Attributes
 {
-    public class UserAuthorizeAttribute : Attribute, IAuthorizationFilter
+    public class UserAuthorizeAttribute : Attribute, IAsyncActionFilter
     {
-        //UserAuthorizeAttribute : IAsyncActionFilter
-        //public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        //{
-        //    //var cacheService = context.HttpContext.RequestServices.GetRequiredService<IMemoryCache>();
-        //    var userService = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-        //    var responseUser = await userService.GetUserByUserName(context.HttpContext.User.Identity.Name);
-        //    var roles = responseUser.Data.UserRoles.Select(n => n.Role.RoleCode);
-
-        //    string controllerName = context.ActionDescriptor.RouteValues["controller"].ToString();
-        //    string actionName = context.ActionDescriptor.RouteValues["action"].ToString();
-
-        //    //var identityRoles = context.HttpContext.User.Claims.Select(n => n.Value);
-        //    if(!roles.Contains(controllerName + "-" + actionName))
-        //    {
-        //        context.Result = new ContentResult()
-        //        {
-        //            StatusCode = 401,
-        //            ContentType = "application/json",
-        //            Content = "bạn không có quyền vào trang này !"
-        //        };
-        //    }
-        //    await next();
-        //}
-
-        //public async Task OnAuthorization(AuthorizationFilterContext context)
-        //{
-        //    //var cacheService = context.HttpContext.RequestServices.GetRequiredService<IMemoryCache>();
-        //    var userService = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-        //    var responseUser = await userService.GetUserByUserName(context.HttpContext.User.Identity.Name);
-        //    var roles = responseUser.Data.UserRoles.Select(n => n.Role.RoleCode);
-
-        //    string controllerName = context.ActionDescriptor.RouteValues["controller"].ToString();
-        //    string actionName = context.ActionDescriptor.RouteValues["action"].ToString();
-
-        //    //var identityRoles = context.HttpContext.User.Claims.Select(n => n.Value);
-        //    if (!roles.Contains(controllerName + "-" + actionName))
-        //    {
-        //        context.Result = new ContentResult()
-        //        {
-        //            StatusCode = 401,
-        //            ContentType = "application/json",
-        //            Content = "bạn không có quyền vào trang này !"
-        //        };
-        //    }
-        //}
-
-        public void OnAuthorization(AuthorizationFilterContext context)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var allowAttr = (context.ActionDescriptor as ControllerActionDescriptor).MethodInfo.GetCustomAttributes(typeof(AllowAnonymousAttribute), false).FirstOrDefault();
-            if(allowAttr != null)
+            if (allowAttr != null)
             {
+                await next();
+            }
+
+            if (string.IsNullOrEmpty(context.HttpContext.User.Identity.Name))
+            {
+                context.Result = new StatusCodeResult(401);
                 return;
+            }
+            else
+            {
+                //var cacheService = context.HttpContext.RequestServices.GetRequiredService<IMemoryCache>();
+                //var userService = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+                //var responseUser = await userService.GetUserByUserName(context.HttpContext.User.Identity.Name);
+                //var roles = responseUser.Data?.UserRoles?.Select(n => n?.Role?.RoleCode);
+
+                //string controllerName = context.ActionDescriptor.RouteValues["controller"].ToString();
+                //string actionName = context.ActionDescriptor.RouteValues["action"].ToString();
+
+                ////var identityRoles = context.HttpContext.User.Claims.Select(n => n.Value);
+                //if (!roles.Contains(controllerName + "-" + actionName))
+                //{
+                //    context.Result = new ContentResult()
+                //    {
+                //        StatusCode = 401,
+                //        ContentType = "application/json",
+                //        Content = "bạn không có quyền vào trang này !"
+                //    };
+                //    return;
+                //}
+                await next();
             }
         }
     }
