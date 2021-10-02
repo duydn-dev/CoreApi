@@ -21,6 +21,24 @@ namespace Neac.BusinessLogic.Repository
             _unitOfWork = unitOfWork;
             _userRepository = userRepository;
         }
+
+        public async Task<Response<GetRolesByUserDtos>> GetUserRole(Guid userId)
+        {
+            try
+            {
+                var roles = await (from ur in _unitOfWork.GetRepository<UserRole>().GetAll()
+                                   join r in _unitOfWork.GetRepository<Role>().GetAll() on ur.RoleId equals r.RoleId
+                                   where ur.UserId == userId
+                                   select r).ToListAsync();
+
+                return Response<GetRolesByUserDtos>.CreateSuccessResponse(new GetRolesByUserDtos {UserId = userId, Roles = roles });
+            }
+            catch(Exception ex)
+            {
+                return Response<GetRolesByUserDtos>.CreateErrorResponse(ex);
+            }
+        }
+
         public async Task<Response<bool>> UpdateListRole(List<Role> roles)
         {
             try

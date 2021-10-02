@@ -31,7 +31,7 @@ namespace Neac.DataAccess
 
             var optionsBuilder = new DbContextOptionsBuilder<NeacDbContext>();
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("NeacDbContext"));
-            //optionsBuilder.UseSqlServer("Data Source=DESKTOP-7JD9JER;Initial Catalog=CoreDb;Integrated Security=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            //optionsBuilder.UseSqlServer("Data Source=DESKTOP-V64DOTK;Initial Catalog=CoreDb;Integrated Security=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
 
             return new NeacDbContext(optionsBuilder.Options);
         }

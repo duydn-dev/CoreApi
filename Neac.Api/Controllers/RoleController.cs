@@ -53,5 +53,13 @@ namespace Neac.Api.Controllers
         {
             return await _roleRepository.UpdateUserRole(request);
         }
+
+        [RoleDescription("Lấy danh sách quyền theo tài khoản")]
+        [Route("get-user-role/{userId}")]
+        [HttpGet]
+        public async Task<Response<GetRolesByUserDtos>> GetUserRole(Guid userId)
+        {
+            return await _roleRepository.GetUserRole(userId);
+        }
     }
 }
