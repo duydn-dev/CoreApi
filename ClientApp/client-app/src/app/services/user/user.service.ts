@@ -11,7 +11,10 @@ export class UserService {
     ) {
   }
 
-  login(username:string, password:string){
-    return this._baseService.post('api/user/login',{ username, password })
+  login(user:any){
+    return this._baseService.post('api/user/login',{...user});
+  }
+  getRoles(userId: any){
+    return this._baseService.get("api/get-user-role",userId);
   }
 }

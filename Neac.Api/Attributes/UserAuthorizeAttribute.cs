@@ -33,7 +33,7 @@ namespace Neac.Api.Attributes
                 //var cacheService = context.HttpContext.RequestServices.GetRequiredService<IMemoryCache>();
                 //var userService = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
                 //var responseUser = await userService.GetUserByUserName(context.HttpContext.User.Identity.Name);
-                //var roles = responseUser.Data?.UserRoles?.Select(n => n?.Role?.RoleCode);
+                //var roles = responseUser.ResponseData?.UserRoles?.Select(n => n?.Role?.RoleCode);
 
                 //string controllerName = context.ActionDescriptor.RouteValues["controller"].ToString();
                 //string actionName = context.ActionDescriptor.RouteValues["action"].ToString();

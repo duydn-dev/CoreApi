@@ -1,6 +1,10 @@
 export class User{
     userId?: number;
     userName?: string;
-    token: string;
-    expire: Date;
+    email?: string;
+    address?: string;
+    numberPhone?: string;
+    fullName?: string;
+    token?: string;
+    expire?: Date;
 } 

@@ -10,7 +10,7 @@ namespace Neac.BusinessLogic.Contracts
 {
     public interface IUserRepository
     {
-        Task<Response<string>> Login(UserLoginDto request);
+        Task<Response<UserLoginResponseDto>> Login(UserLoginDto request);
         Task<Response<User>> GetUserByUserName(string userName);
         Task<Response<GetListResponseModel<List<UserCreateDto>>>> GetListUser(GetListUserRequestDto request);
         Task<Response<UserCreateDto>> Create(UserCreateDto request);

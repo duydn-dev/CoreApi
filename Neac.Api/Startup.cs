@@ -23,11 +23,24 @@ namespace Neac.Api
         }
 
         public IConfiguration Configuration { get; }
+        private string corsKey = "cors";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.Installer(Configuration);
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: corsKey,
+                                  builder =>
+                                  {
+                                      builder
+                                      .WithOrigins("http://localhost:4200")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod()
+                                      .AllowCredentials();
+                                  });
+            });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -75,6 +88,7 @@ namespace Neac.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors(corsKey);
             app.UseAuthentication();
             app.UseAuthorization();
 

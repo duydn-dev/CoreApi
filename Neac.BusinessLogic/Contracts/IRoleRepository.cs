@@ -13,5 +13,6 @@ namespace Neac.BusinessLogic.Contracts
     {
         Task<Response<bool>> UpdateListRole(List<Role> roles);
         Task<Response<Guid>> UpdateUserRole(UpdateRoleUserDto request);
+        Task<Response<GetRolesByUserDtos>> GetUserRole(Guid userId);
     }
 }

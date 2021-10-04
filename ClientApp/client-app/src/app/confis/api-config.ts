@@ -1,3 +1,3 @@
 export class ApiConfig{
-    static apiUrl:string = "localhost:5001";
+    static apiUrl:string = "https://localhost:5001";
 } 

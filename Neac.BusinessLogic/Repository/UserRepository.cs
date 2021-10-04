@@ -62,7 +62,7 @@ namespace Neac.BusinessLogic.Repository
                 responseData.Data = _mapper.Map<List<User>, List<UserCreateDto>>(result);
                 return Response<GetListResponseModel<List<UserCreateDto>>>.CreateSuccessResponse(responseData);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Response<GetListResponseModel<List<UserCreateDto>>>.CreateErrorResponse(ex);
             }
@@ -95,7 +95,7 @@ namespace Neac.BusinessLogic.Repository
                 await _unitOfWork.SaveAsync();
                 return Response<bool>.CreateSuccessResponse(true);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Response<bool>.CreateErrorResponse(ex);
             }
@@ -141,55 +141,60 @@ namespace Neac.BusinessLogic.Repository
             }
         }
 
-        public async Task<Response<string>> Login(UserLoginDto request)
+        public async Task<Response<UserLoginResponseDto>> Login(UserLoginDto request)
         {
             try
             {
                 var responseUser = await GetUserByUserName(request.UserName);
                 if (responseUser.ResponseData == null)
                 {
-                    return new Response<string>(false, 404, "không tìm thấy tài khoản này !", null);
+                    return new Response<UserLoginResponseDto>(false, 404, "không tìm thấy tài khoản này !", null);
                 }
                 if (responseUser.ResponseData.Status == UserStatus.Locked)
                 {
-                    return new Response<string>(false, 200, "tài khoản đang bị khóa !", null);
+                    return new Response<UserLoginResponseDto>(false, 200, "tài khoản đang bị khóa !", null);
                 }
                 if (Md5Encrypt.MD5Hash(request.PassWord) != responseUser.ResponseData.PassWord)
                 {
-                    return new Response<string>(false, 404, "sai mật khẩu, vui lòng xem lại", null);
+                    return new Response<UserLoginResponseDto>(false, 404, "sai mật khẩu, vui lòng xem lại", null);
                 }
                 var token = await GenerateToken(responseUser.ResponseData);
-                return Response<string>.CreateSuccessResponse(token);
+                return Response<UserLoginResponseDto>.CreateSuccessResponse(new UserLoginResponseDto()
+                {
+                    Address = responseUser.ResponseData.Address,
+                    Email = responseUser.ResponseData.Email,
+                    UserName = responseUser.ResponseData.UserName,
+                    FullName = responseUser.ResponseData.FullName,
+                    NumberPhone = responseUser.ResponseData.NumberPhone,
+                    UserId = responseUser.ResponseData.UserId,
+                    Token = token.token,
+                    Expire = token.expire
+                });
             }
             catch (Exception ex)
             {
-                return Response<string>.CreateErrorResponse(ex);
+                return Response<UserLoginResponseDto>.CreateErrorResponse(ex);
             }
         }
-        private async Task<string> GenerateToken(User user)
+        private async Task<dynamic> GenerateToken(User user)
         {
+            DateTime expire = DateTime.Now.AddHours(Convert.ToInt32(_configuration["JWT:expireHour"]));
             var authClaims = new List<Claim>
                 {
                     new Claim("UserId", user.UserId.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
-
-            foreach (var userRole in user.UserRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, userRole.Role.RoleCode));
-            }
-
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddHours(3),
+                expires: expire,
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new { expire, token = new JwtSecurityTokenHandler().WriteToken(token) };
         }
         public async Task<UserCreateDto> GetIdentityUser()
         {

@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { Router } from '@angular/router';
+
 import { State } from 'src/app/ngrx/reducers/user.reducer';
 import * as userActions from '../../../ngrx/actions/login.action';
 import { UserService } from '../../../services/user/user.service';
+import { MessageService } from 'primeng/api';
+import { BaseService } from 'src/app/services/base/base-service.service';
+
 
 @Component({
   selector: 'app-login',
@@ -12,11 +17,17 @@ import { UserService } from '../../../services/user/user.service';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup
+  isSubmit:boolean = false;
   get form() { return this.loginForm.controls; }
+
+
   constructor(
     private _fb: FormBuilder,
     private store: Store<State>,
-    private _userService: UserService
+    private _router: Router,
+    private _userService: UserService,
+    private _messageService: MessageService,
+    private _baseService: BaseService
   ) { }
 
   ngOnInit(): void {
@@ -27,10 +38,19 @@ export class LoginComponent implements OnInit {
   }
 
   loginClick() {
+    this.isSubmit = true;
     if (this.loginForm.invalid) {
       return;
     }
-    
-    //this.store.dispatch(userActions.login({user: { userId: 1, userName: "duydn"}}));
+    this._userService.login(this.loginForm.value).subscribe(response => {
+      if(response.success){
+        this._baseService.setAuthorizeHeader(response.responseData.token);
+        this.store.dispatch(userActions.login({user:{...response.responseData }}));
+        this._router.navigate(['/']);
+      }
+      else{
+        this._messageService.add({ severity: 'error', summary: 'Lỗi', detail: response.message });
+      }
+    })
   }
 }
