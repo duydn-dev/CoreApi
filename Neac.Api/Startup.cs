@@ -28,6 +28,8 @@ namespace Neac.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache();
+            string[] origins = Configuration["origins:domains"].Split(",");
             services.Installer(Configuration);
             services.AddCors(options =>
             {
@@ -35,7 +37,7 @@ namespace Neac.Api
                                   builder =>
                                   {
                                       builder
-                                      .WithOrigins("http://localhost:4200")
+                                      .WithOrigins(origins)
                                       .AllowAnyHeader()
                                       .AllowAnyMethod()
                                       .AllowCredentials();

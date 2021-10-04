@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule }   from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +16,9 @@ import { MessageService } from 'primeng/api';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { AuthGuard } from './guard/auth-guard';
+import { TokenInterceptor } from './interceptors/token.interceptor';
+import { MenuLeftComponent } from './components/menu-left/menu-left.component';
+import { MenuTopComponent } from './components/menu-top/menu-top.component';
 
 
 @NgModule({
@@ -23,7 +26,9 @@ import { AuthGuard } from './guard/auth-guard';
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    NotfoundComponent
+    NotfoundComponent,
+    MenuLeftComponent,
+    MenuTopComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +40,11 @@ import { AuthGuard } from './guard/auth-guard';
     ToastModule,
     StoreModule.forRoot(reducers, {metaReducers})
   ],
-  providers: [MessageService, AuthGuard],
+  providers: [
+    MessageService,
+    AuthGuard,
+    //{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

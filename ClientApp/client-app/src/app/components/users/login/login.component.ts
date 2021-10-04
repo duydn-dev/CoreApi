@@ -8,6 +8,7 @@ import * as userActions from '../../../ngrx/actions/login.action';
 import { UserService } from '../../../services/user/user.service';
 import { MessageService } from 'primeng/api';
 import { BaseService } from 'src/app/services/base/base-service.service';
+import { CommonService } from 'src/app/services/base/common.service';
 
 
 @Component({
@@ -27,10 +28,12 @@ export class LoginComponent implements OnInit {
     private _router: Router,
     private _userService: UserService,
     private _messageService: MessageService,
-    private _baseService: BaseService
+    private _baseService: BaseService,
+    private _commonService: CommonService
   ) { }
 
   ngOnInit(): void {
+    console.log("aaaa")
     this.loginForm = this._fb.group({
       userName: this._fb.control(null, [Validators.required]),
       passWord: this._fb.control(null, [Validators.required]),
@@ -46,7 +49,8 @@ export class LoginComponent implements OnInit {
       if(response.success){
         this._baseService.setAuthorizeHeader(response.responseData.token);
         this.store.dispatch(userActions.login({user:{...response.responseData }}));
-        this._router.navigate(['/']);
+        this._commonService.setLogin(response.responseData);
+        this._router.navigate(["/"]);
       }
       else{
         this._messageService.add({ severity: 'error', summary: 'Lỗi', detail: response.message });

@@ -23,15 +23,15 @@ namespace Neac.DataAccess
         {
             var envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Path.Combine(Directory.GetCurrentDirectory()))
-                .AddJsonFile("appsettings.json", optional: false)
-                .AddJsonFile($"appsettings.{envName}.json", optional: false)
-                .Build();
+            //var configuration = new ConfigurationBuilder()
+            //    .SetBasePath(Path.Combine(Directory.GetCurrentDirectory()))
+            //    .AddJsonFile("appsettings.json", optional: false)
+            //    .AddJsonFile($"appsettings.{envName}.json", optional: false)
+            //    .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<NeacDbContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("NeacDbContext"));
-            //optionsBuilder.UseSqlServer("Data Source=DESKTOP-V64DOTK;Initial Catalog=CoreDb;Integrated Security=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            //optionsBuilder.UseSqlServer(configuration.GetConnectionString("NeacDbContext"));
+            optionsBuilder.UseSqlServer("Data Source=DESKTOP-7JD9JER;Initial Catalog=CoreDb;Integrated Security=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
 
             return new NeacDbContext(optionsBuilder.Options);
         }

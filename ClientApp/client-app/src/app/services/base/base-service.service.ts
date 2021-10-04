@@ -19,10 +19,14 @@ export class BaseService {
 
   constructor(private _http: HttpClient) { }
   setAuthorizeHeader(token: string){
-    httpOptions.headers.append('Authorization', `Bearer ${token}`);
+    let headers = new HttpHeaders();
+    headers = headers
+              .set('Content-Type', 'application/json; charset=utf-8')
+              .set('Access-Control-Allow-Origin', '*')
+              .set('Authorization', `Bearer ${token}`)
+    httpOptions.headers = headers;
   }
   get(url: string, params: any): Observable<any> {
-    console.log(httpOptions);
     return this._http.get(`${ApiConfig.apiUrl}/${url}/${params}`, httpOptions);
   }
   getWithQuery(url: string, paramsName: string, params: string): Observable<any> {
@@ -40,5 +44,4 @@ export class BaseService {
   deleteWithQuery(url: string,paramsName: string, params: string) : Observable<any>{
     return this._http.delete(`${ApiConfig.apiUrl}/${url}?${paramsName}=${params}`, httpOptions);
   }
-
 }

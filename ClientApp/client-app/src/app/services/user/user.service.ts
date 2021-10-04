@@ -14,7 +14,10 @@ export class UserService {
   login(user:any){
     return this._baseService.post('api/user/login',{...user});
   }
+  getCurrentUser(){
+    return localStorage.getItem('userLogin');
+  }
   getRoles(userId: any){
-    return this._baseService.get("api/get-user-role",userId);
+    return this._baseService.get("api/role/get-user-role",userId);
   }
 }

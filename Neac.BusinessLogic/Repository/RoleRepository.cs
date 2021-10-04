@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Neac.BusinessLogic.Contracts;
 using Neac.BusinessLogic.UnitOfWork;
 using Neac.Common.Dtos;
@@ -16,22 +17,32 @@ namespace Neac.BusinessLogic.Repository
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _userRepository;
-        public RoleRepository(IUnitOfWork unitOfWork, IUserRepository userRepository)
+        private readonly IMemoryCache _memoryCache;
+        public RoleRepository(IUnitOfWork unitOfWork, IUserRepository userRepository, IMemoryCache memoryCache)
         {
             _unitOfWork = unitOfWork;
             _userRepository = userRepository;
+            _memoryCache = memoryCache;
         }
 
         public async Task<Response<GetRolesByUserDtos>> GetUserRole(Guid userId)
         {
             try
             {
+                var userRoleMem = _memoryCache.Get($"user/{userId}");
+                if (userRoleMem != null)
+                {
+                    return Response<GetRolesByUserDtos>.CreateSuccessResponse((GetRolesByUserDtos)userRoleMem);
+                }
                 var roles = await (from ur in _unitOfWork.GetRepository<UserRole>().GetAll()
                                    join r in _unitOfWork.GetRepository<Role>().GetAll() on ur.RoleId equals r.RoleId
                                    where ur.UserId == userId
                                    select r).ToListAsync();
 
-                return Response<GetRolesByUserDtos>.CreateSuccessResponse(new GetRolesByUserDtos {UserId = userId, Roles = roles });
+                var userRoles = new GetRolesByUserDtos { UserId = userId, Roles = roles };
+                _memoryCache.Set($"user/{userId}", userRoles);
+
+                return Response<GetRolesByUserDtos>.CreateSuccessResponse(userRoles);
             }
             catch(Exception ex)
             {
@@ -89,6 +100,15 @@ namespace Neac.BusinessLogic.Repository
                     await _unitOfWork.GetRepository<UserRole>().Add(new UserRole() { RoleId = item, UserId = request.UserId, UserRoleId = Guid.NewGuid() });
                 }
                 await _unitOfWork.SaveAsync();
+
+                var roles = await (from ur in _unitOfWork.GetRepository<UserRole>().GetAll()
+                                   join r in _unitOfWork.GetRepository<Role>().GetAll() on ur.RoleId equals r.RoleId
+                                   where ur.UserId == request.UserId
+                                   select r).ToListAsync();
+                var userRoles = new GetRolesByUserDtos { UserId = request.UserId, Roles = roles };
+
+                _memoryCache.Remove($"user/{request.UserId}");
+                _memoryCache.Set($"user/{request.UserId}", userRoles);
                 return Response<Guid>.CreateSuccessResponse(request.UserId);
             }
             catch(Exception ex)

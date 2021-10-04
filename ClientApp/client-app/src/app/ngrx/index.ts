@@ -1,4 +1,4 @@
-import { ActionReducer, ActionReducerMap, createFeatureSelector, MetaReducer } from '@ngrx/store';
+import { ActionReducer, ActionReducerMap, MetaReducer } from '@ngrx/store';
 import * as fromUser from './reducers/user.reducer';
 
 export interface State {

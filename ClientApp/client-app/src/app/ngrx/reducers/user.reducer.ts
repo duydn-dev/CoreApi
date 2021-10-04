@@ -14,7 +14,7 @@ export const initialState: State = {
 
 const loginReducer = createReducer(
     initialState,
-    on(userActions.login, (state, {user}) => ({ ...state, user, isLogin: true })),
+    on(userActions.login, (state, {user}) =>  ({ ...state, user, isLogin: true })),
 );
 
 export function reducer(state: State | undefined, action: Action): any {
