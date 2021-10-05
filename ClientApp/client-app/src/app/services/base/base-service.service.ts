@@ -18,14 +18,6 @@ const httpOptions = {
 export class BaseService {
 
   constructor(private _http: HttpClient) { }
-  setAuthorizeHeader(token: string){
-    let headers = new HttpHeaders();
-    headers = headers
-              .set('Content-Type', 'application/json; charset=utf-8')
-              .set('Access-Control-Allow-Origin', '*')
-              .set('Authorization', `Bearer ${token}`)
-    httpOptions.headers = headers;
-  }
   get(url: string, params: any): Observable<any> {
     return this._http.get(`${ApiConfig.apiUrl}/${url}/${params}`, httpOptions);
   }

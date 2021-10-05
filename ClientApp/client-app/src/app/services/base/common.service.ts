@@ -8,20 +8,12 @@ export class CommonService {
   constructor(
   ) { }
   checkLogin(){
-    const data:any = localStorage.getItem("user");
-    if(!data){
+    const data:any = JSON.parse(localStorage.getItem("user"));
+    if(!data || !data.user)
       return false;
-    }
-    if(new Date(data.expire) > new Date()){
-      localStorage.removeItem("user");
+    else if(new Date(data.user.expire) < new Date()){
       return false;
     }
     return true;
-  }
-  setLogin(user:any){
-    if(localStorage.getItem("user")){
-      localStorage.removeItem("user");
-    }
-    localStorage.setItem("user", JSON.stringify(user));
   }
 }

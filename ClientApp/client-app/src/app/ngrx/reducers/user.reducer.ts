@@ -8,15 +8,20 @@ export interface State {
 }
 const userLogged:any = JSON.parse(localStorage.getItem('user'));
 export const initialState: State = {
-    user: userLogged ? userLogged.user: new User(),
-    isLogin: (userLogged) ? userLogged.isLogin : false
+    user: (userLogged && userLogged.user) ? userLogged.user: new User(),
+    isLogin: userLogged ? userLogged.isLogin : false
 };
 
 const loginReducer = createReducer(
     initialState,
     on(userActions.login, (state, {user}) =>  (
-        { user: user, isLogin: true }
-    )),
+        { 
+            user: user, isLogin: true }
+        )),
+    on(userActions.logout, () => {
+        localStorage.removeItem('user');
+        return null;
+    })
 );
 
 export function reducer(state: State | undefined, action: Action): any {

@@ -16,27 +16,22 @@ export class MenuLeftComponent implements OnInit {
       {
         name: "Dashboard",
         link: "/",
-        childs:[
-          {name: "Dashboard Child 1", link: "/link1"},
-          {name: "Dashboard Child 2", link: "/link2"},
-          {name: "Dashboard Child 3", link: "/link3"},
-        ] 
+        icon: "home",
       },
       {
         name: "Phòng họp",
-        link: "/phonghop",
-        childs: [
-          {
-            name: "PhongHop 1", 
-            link: "/phonghop1", 
-          },
-          {
-            name: "PhongHop 2",
-            link: "/phonghop2"
-          },
+        link: "/rooms",
+        icon: "meeting_room"
+      },
+      {
+        name: "Hệ thống",
+        link: "/system",
+        icon: "settings",
+        childs:[
+          {name: "Người dùng", link: "/users"},
+          {name: "Quyền hạn", link: "/users"},
         ]
       },
-      {name: "Hệ thống", link: "/hethong"},
     ]
   }
   

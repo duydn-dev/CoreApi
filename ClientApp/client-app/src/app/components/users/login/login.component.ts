@@ -7,8 +7,6 @@ import { State } from 'src/app/ngrx/reducers/user.reducer';
 import * as userActions from '../../../ngrx/actions/login.action';
 import { UserService } from '../../../services/user/user.service';
 import { MessageService } from 'primeng/api';
-import { BaseService } from 'src/app/services/base/base-service.service';
-import { CommonService } from 'src/app/services/base/common.service';
 
 
 @Component({
@@ -27,9 +25,7 @@ export class LoginComponent implements OnInit {
     private store: Store<State>,
     private _router: Router,
     private _userService: UserService,
-    private _messageService: MessageService,
-    private _baseService: BaseService,
-    private _commonService: CommonService
+    private _messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -46,9 +42,7 @@ export class LoginComponent implements OnInit {
     }
     this._userService.login(this.loginForm.value).subscribe(response => {
       if(response.success){
-        this._baseService.setAuthorizeHeader(response.responseData.token);
         this.store.dispatch(userActions.login({user:{...response.responseData }}));
-        //this._commonService.setLogin(response.responseData);
         this._router.navigate(["/"]);
       }
       else{

@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { State } from 'src/app/ngrx';
+import * as userActions from '../../ngrx/actions/login.action';
 
 @Component({
   selector: 'app-menu-top',
@@ -7,9 +11,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MenuTopComponent implements OnInit {
 
-  constructor() { }
+  currentUser:any = {};
+  constructor(
+    private _store : Store<State>,
+    private _router: Router
+  ) { }
 
   ngOnInit(): void {
+    this._store.subscribe(n => {
+      this.currentUser = n.user.user;
+    })
   }
-
+  logout(){
+    localStorage.removeItem('user');
+    this._router.navigate(["/login"]);
+  }
 }

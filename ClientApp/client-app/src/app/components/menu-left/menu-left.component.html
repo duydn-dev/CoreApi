@@ -10,7 +10,7 @@
                     <div class="sub-navigation" *ngFor="let menu1 of menuData">
                         <div class="sub-navigation-item">
                             <a class="mdl-navigation__link" (click)="menuClick($event)">
-                                <i class="material-icons">view_comfy</i>
+                                <i class="material-icons">{{menu1.icon}}</i>
                                 {{menu1.name}}
                                 <i class="material-icons" *ngIf="menu1.childs?.length > 0">keyboard_arrow_down</i>
                             </a>
