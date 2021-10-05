@@ -33,7 +33,6 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log("aaaa")
     this.loginForm = this._fb.group({
       userName: this._fb.control(null, [Validators.required]),
       passWord: this._fb.control(null, [Validators.required]),
@@ -49,7 +48,7 @@ export class LoginComponent implements OnInit {
       if(response.success){
         this._baseService.setAuthorizeHeader(response.responseData.token);
         this.store.dispatch(userActions.login({user:{...response.responseData }}));
-        this._commonService.setLogin(response.responseData);
+        //this._commonService.setLogin(response.responseData);
         this._router.navigate(["/"]);
       }
       else{

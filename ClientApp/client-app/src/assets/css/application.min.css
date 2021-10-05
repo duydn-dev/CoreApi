@@ -4740,7 +4740,7 @@ input.mdl-button[type=submit] {
 .mdl-layout__content {
     -ms-flex: 0 1 auto;
     position: relative;
-    display: inline-block;
+    /* display: inline-block; */
     overflow-y: auto;
     overflow-x: hidden;
     flex-grow: 1;
@@ -6772,7 +6772,7 @@ main {
 
 .mdl-layout__drawer header {
     position: relative;
-    height: 56px;
+    height: 64px;
     background: rgba(0, 0, 0, .85);
 }
 .mdl-layout__drawer header>strong {
@@ -6839,11 +6839,11 @@ main {
     cursor: pointer
 }
 
-.mdl-layout__drawer .mdl-navigation .sub-navigation .mdl-navigation__link i:last-child {
+/* .mdl-layout__drawer .mdl-navigation .sub-navigation .mdl-navigation__link i:last-child {
     margin: 0 16px 0 0;
     transition: transform .3s;
     float: right
-}
+} */
 
 .mdl-layout__drawer .mdl-navigation .sub-navigation .mdl-navigation {
     display: none;
@@ -9083,7 +9083,8 @@ a {
 .scroller {
     position: absolute;
     height: 100%;
-    overflow-y: scroll
+    overflow-y: scroll;
+    width: 100%
 }
 
 .scroller__bar {

@@ -28,7 +28,7 @@ import { MenuTopComponent } from './components/menu-top/menu-top.component';
     DashboardComponent,
     NotfoundComponent,
     MenuLeftComponent,
-    MenuTopComponent
+    MenuTopComponent,
   ],
   imports: [
     BrowserModule,

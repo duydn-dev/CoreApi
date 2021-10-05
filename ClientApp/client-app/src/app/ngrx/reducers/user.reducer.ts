@@ -6,15 +6,17 @@ export interface State {
     user: User;
     isLogin: boolean;
 }
-
+const userLogged:any = JSON.parse(localStorage.getItem('user'));
 export const initialState: State = {
-    user: new User(),
-    isLogin: false
+    user: userLogged ? userLogged.user: new User(),
+    isLogin: (userLogged) ? userLogged.isLogin : false
 };
 
 const loginReducer = createReducer(
     initialState,
-    on(userActions.login, (state, {user}) =>  ({ ...state, user, isLogin: true })),
+    on(userActions.login, (state, {user}) =>  (
+        { user: user, isLogin: true }
+    )),
 );
 
 export function reducer(state: State | undefined, action: Action): any {

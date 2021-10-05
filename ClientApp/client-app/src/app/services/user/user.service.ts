@@ -15,7 +15,7 @@ export class UserService {
     return this._baseService.post('api/user/login',{...user});
   }
   getCurrentUser(){
-    return localStorage.getItem('userLogin');
+    return localStorage.getItem('user');
   }
   getRoles(userId: any){
     return this._baseService.get("api/role/get-user-role",userId);

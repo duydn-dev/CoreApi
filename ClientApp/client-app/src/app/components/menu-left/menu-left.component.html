@@ -7,41 +7,27 @@
         <div class="scroller" id="scroller">
             <div class="scroll__container" id="scroll__container">
                 <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link mdl-navigation__link--current" href="index.html">
-                        <i class="material-icons" role="presentation">dashboard</i>
-                        Dashboard
-                    </a>
-                    <div class="sub-navigation">
-                        <a class="mdl-navigation__link">
-                            <i class="material-icons">view_comfy</i>
-                            UI
-                            <i class="material-icons">keyboard_arrow_down</i>
-                        </a>
-                        <div class="mdl-navigation">
-                            <a class="mdl-navigation__link" href="ui-buttons.html">
-                                Buttons
+                    <div class="sub-navigation" *ngFor="let menu1 of menuData">
+                        <div class="sub-navigation-item">
+                            <a class="mdl-navigation__link" (click)="menuClick($event)">
+                                <i class="material-icons">view_comfy</i>
+                                {{menu1.name}}
+                                <i class="material-icons" *ngIf="menu1.childs?.length > 0">keyboard_arrow_down</i>
                             </a>
-                            <a class="mdl-navigation__link" href="ui-cards.html">
-                                Cards
-                            </a>
-                            <a class="mdl-navigation__link" href="ui-colors.html">
-                                Colors
-                            </a>
-                            <a class="mdl-navigation__link" href="ui-form-components.html">
-                                Forms
-                            </a>
-                            <a class="mdl-navigation__link" href="ui-icons.html">
-                                Icons
-                            </a>
-                            <a class="mdl-navigation__link" href="ui-typography.html">
-                                Typography
-                            </a>
-                            <a class="mdl-navigation__link" href="ui-tables.html">
-                                Tables
-                            </a>
+                            <div class="mdl-navigation">
+                                <div *ngIf="menu1.childs?.length > 0" class="sub-navigation">
+                                    <div class="sub-navigation-item" *ngFor="let menu2 of menu1.childs">
+                                        <a class="mdl-navigation__link" (click)="menuClick($event)">
+                                            {{menu2.name}}
+                                            <i class="material-icons"
+                                                *ngIf="menu2.childs?.length > 0">keyboard_arrow_down</i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <a class="mdl-navigation__link" href="ui-components.html">
+                    <!-- <a class="mdl-navigation__link" href="ui-components.html">
                         <i class="material-icons">developer_board</i>
                         Components
                     </a>
@@ -77,7 +63,7 @@
                                 404
                             </a>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="mdl-layout-spacer"></div>
                     <hr>
                     <a class="mdl-navigation__link" href="https://github.com/CreativeIT/getmdl-dashboard">

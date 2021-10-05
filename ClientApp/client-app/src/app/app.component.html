@@ -1,10 +1,10 @@
-<app-menu-top></app-menu-top>
-<app-menu-left></app-menu-left>
+<app-menu-top *ngIf="isLogin"></app-menu-top>
+<app-menu-left *ngIf="isLogin"></app-menu-left>
 <main class="mdl-layout__content">
 
-    <div class="mdl-grid mdl-grid--no-spacing dashboard">
+    <div class="dashboard">
 
-        <div class="mdl-grid mdl-cell mdl-cell--9-col-desktop mdl-cell--12-col-tablet mdl-cell--4-col-phone mdl-cell--top">
+        <div class="">
             <router-outlet></router-outlet>
         </div>
 

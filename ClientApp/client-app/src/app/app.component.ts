@@ -17,7 +17,8 @@ export class AppComponent {
     private store: Store<State>
   ) {
     this.primengConfig.ripple = true;
-    this.store.subscribe(async n => {
+    this.store.subscribe(n => {
+      console.log(n)
       this.isLogin = n.user.isLogin;
     })
   }

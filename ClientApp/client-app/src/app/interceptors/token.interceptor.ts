@@ -9,11 +9,11 @@ export class TokenInterceptor implements HttpInterceptor {
         
     }
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        let user:any = localStorage.getItem("userLogin");
+        let user:any = localStorage.getItem("user");
         if(user){
             user = JSON.parse(user);
             if(new Date(user.expire) < new Date()){
-                localStorage.removeItem("userLogin");
+                localStorage.removeItem("user");
                 //this._router.navigate(["login"]);
             }
             else{
