@@ -43,7 +43,6 @@ namespace Neac.Api
                                       .AllowCredentials();
                                   });
             });
-            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Neac.Api", Version = "v1" });
@@ -75,18 +74,22 @@ namespace Neac.Api
                 });
 
             });
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Neac.Api v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.RoutePrefix = "";
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Neac.Api v1");
+                });
             }
-
             app.UseHttpsRedirection();
 
             app.UseRouting();

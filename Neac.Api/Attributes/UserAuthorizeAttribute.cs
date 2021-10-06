@@ -23,7 +23,6 @@ namespace Neac.Api.Attributes
                 await next();
             }
 
-            var r = context.HttpContext.Request.Headers["Authorization"];
             if (string.IsNullOrEmpty(context.HttpContext.User.Identity.Name))
             {
                 context.Result = new StatusCodeResult(401);

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { State } from 'src/app/ngrx';
 import * as userActions from '../../ngrx/actions/login.action';
+declare var $:any;
 
 @Component({
   selector: 'app-menu-top',
@@ -18,12 +19,21 @@ export class MenuTopComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    $('.avatar-dropdown').on('click', function(){
+      $('.mdl-menu__container.is-upgraded').toggleClass("is-visible");
+    });
+
+    $('#btn-profile').on('click', function () {
+      $(this).parents('.box-profile').toggleClass('open');
+    });
+
+
     this._store.subscribe(n => {
-      this.currentUser = n.user.user;
+      this.currentUser = n.user?.user;
     })
   }
   logout(){
-    localStorage.removeItem('user');
+    this._store.dispatch(userActions.logout());
     this._router.navigate(["/login"]);
   }
 }

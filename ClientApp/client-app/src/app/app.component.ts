@@ -16,9 +16,20 @@ export class AppComponent {
     private primengConfig: PrimeNGConfig,
     private store: Store<State>
   ) {
+    this.removeKeyNull();
     this.primengConfig.ripple = true;
     this.store.subscribe(n => {
-      this.isLogin = n.user.isLogin;
+      this.removeKeyNull();
+      this.isLogin = n.user?.isLogin;
     })
+  }
+  removeKeyNull(){
+    const user:any = localStorage.getItem('user');
+    if(user == null || user == "null"){
+      localStorage.removeItem('user');
+    }
+    else if (new Date(user.expire) < new Date()){
+      localStorage.removeItem('user');
+    }
   }
 }

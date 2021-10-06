@@ -12,7 +12,11 @@ import {metaReducers, reducers} from '../app/ngrx/index';
 
 // primNG module
 import {ToastModule} from 'primeng/toast';
+import {TableModule} from 'primeng/table';
 import { MessageService } from 'primeng/api';
+import {PaginatorModule} from 'primeng/paginator';
+
+
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { AuthGuard } from './guard/auth-guard';
@@ -38,12 +42,14 @@ import { MenuTopComponent } from './components/menu-top/menu-top.component';
     HttpClientModule,
     ReactiveFormsModule,
     ToastModule,
+    TableModule,
+    PaginatorModule,
     StoreModule.forRoot(reducers, {metaReducers})
   ],
   providers: [
     MessageService,
     AuthGuard,
-    //{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

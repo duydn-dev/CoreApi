@@ -23,7 +23,7 @@ namespace Neac.Api.Installer
         {
             // add dbcontext
             services.AddHttpContextAccessor();
-            services.AddDbContext<NeacDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("NeacDbContext")));
+            services.AddDbContext<NeacDbContext>(options => options.UseSqlServer(NeacDbContext.ConnectionString));
             //add cache service
             services.AddMemoryCache();
 
@@ -57,6 +57,7 @@ namespace Neac.Api.Installer
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
+            services.AddTransient<IMeetRoomRepository, MeetRoomRepository>();
             // add user-defined service
         }
     }

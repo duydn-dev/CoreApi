@@ -11,21 +11,11 @@ export class TokenInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         let user:any = localStorage.getItem("user");
         if(user){
-            user = JSON.parse(user);
-            if(new Date(user.expire) < new Date()){
-                localStorage.removeItem("user");
-                //this._router.navigate(["login"]);
-            }
-            else{
-                const modifiedReq = req.clone({ 
-                    headers: req.headers.set('Authorization', `Bearer ${user.token}`),
-                });
-                return next.handle(modifiedReq);
-            }
+            const modifiedReq = req.clone({ 
+                headers: req.headers.set('Authorization', `Bearer ${user?.token}`),
+            });
+            return next.handle(modifiedReq);
         }
-        else{
-            return next.handle(req);
-        }
-        
+        return next.handle(req);
     }
 }
