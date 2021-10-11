@@ -36,4 +36,7 @@ export class BaseService {
   deleteWithQuery(url: string,paramsName: string, params: string) : Observable<any>{
     return this._http.delete(`${ApiConfig.apiUrl}/${url}?${paramsName}=${params}`, httpOptions);
   }
+  uploadFile(url, formData){
+    return this._http.post(`${ApiConfig.apiUrl}/${url}`, formData);
+  }
 }

@@ -96,9 +96,9 @@ namespace Neac.Api.Controllers
         [RoleDescription("Upload avatar người dùng")]
         [Route("upload-avatar")]
         [HttpPost]
-        public async Task<Response<string>> UploadAvatar([FromBody]IFormFile avatar)
+        public async Task<Response<string>> UploadAvatar()
         {
-            return await _userRepository.UploadAvatar(avatar);
+            return await _userRepository.UploadAvatar(Request.Form.Files[0]);
         }
     }
 }

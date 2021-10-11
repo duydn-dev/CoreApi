@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { BaseService } from '../base/base-service.service';
 
 @Injectable({
@@ -37,5 +38,10 @@ export class UserService {
   }
   removeUser(userId:any){
     return this._baseService.delete("api/user/delete", userId);
+  }
+  uploadAvatar(file:any) :Observable<any>{
+    const formData = new FormData(); 
+    formData.append('file', file);
+    return this._baseService.uploadFile("api/user/upload-avatar",formData)
   }
 }

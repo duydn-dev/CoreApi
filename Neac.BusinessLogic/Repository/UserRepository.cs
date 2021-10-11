@@ -237,11 +237,11 @@ namespace Neac.BusinessLogic.Repository
         {
             try
             {
-                string vitualPath = _configuration.GetSection("VitualDirectoryPath").Value + avatar.Name;
-                //using (var stream = File.Create(vitualPath))
-                //{
-                //    await avatar.CopyToAsync(stream);
-                //}
+                string vitualPath = Path.Combine(_configuration.GetSection("VitualDirectoryPath").Value , avatar.FileName);
+                using (var stream = new FileStream(vitualPath, FileMode.Create))
+                {
+                    await avatar.CopyToAsync(stream);
+                }
                 return Response<string>.CreateSuccessResponse(vitualPath.Replace(Path.GetPathRoot(vitualPath), ""));
             }
             catch(Exception ex)

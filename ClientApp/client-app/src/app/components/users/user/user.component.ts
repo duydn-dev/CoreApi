@@ -100,7 +100,9 @@ export class UserComponent implements OnInit {
   onUploadAvatar(event){
     if(event.currentFiles.length > 0){
       this.avatar = event.currentFiles[0];
-      
+      this._userService.uploadAvatar(this.avatar).subscribe(response => {
+        console.log(response.responseData);
+      })
     }
   }
   save(){
