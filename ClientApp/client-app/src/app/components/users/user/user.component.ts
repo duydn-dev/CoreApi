@@ -24,6 +24,7 @@ export class UserComponent implements OnInit {
   userId: string;
   userStatus:any[] = [];
   positions:any[] = [];
+  avatar:any;
   get form() { return this.userForm.controls; }
 
   // init funtion
@@ -97,7 +98,10 @@ export class UserComponent implements OnInit {
     });
   }
   onUploadAvatar(event){
-    console.log(event);
+    if(event.currentFiles.length > 0){
+      this.avatar = event.currentFiles[0];
+      
+    }
   }
   save(){
     this.isSubmit = true;
