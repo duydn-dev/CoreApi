@@ -52,6 +52,14 @@ namespace Neac.Api.Controllers
             return await _userRepository.GetListUser(req);
         }
 
+        [RoleDescription("Xem tài khoản bằng Id")]
+        [Route("{userId}")]
+        [HttpGet]
+        public async Task<Response<User>> GetById(Guid userId)
+        {
+            return await _userRepository.GetUserByUserId(userId);
+        }
+
         [RoleDescription("Thêm mới tài khoản")]
         [Route("create")]
         [HttpPost]
@@ -83,6 +91,14 @@ namespace Neac.Api.Controllers
         public async Task<Response<bool>> Delete([FromQuery]List<Guid> userIds)
         {
             return await _userRepository.DeleteMany(userIds);
+        }
+        
+        [RoleDescription("Upload avatar người dùng")]
+        [Route("upload-avatar")]
+        [HttpPost]
+        public async Task<Response<string>> UploadAvatar([FromBody]IFormFile avatar)
+        {
+            return await _userRepository.UploadAvatar(avatar);
         }
     }
 }

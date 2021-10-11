@@ -30,26 +30,35 @@ namespace Neac.Api.Attributes
             }
             else
             {
-                //var cacheService = context.HttpContext.RequestServices.GetRequiredService<IMemoryCache>();
-                //var userService = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-                //var responseUser = await userService.GetUserByUserName(context.HttpContext.User.Identity.Name);
-                //var roles = responseUser.ResponseData?.UserRoles?.Select(n => n?.Role?.RoleCode);
+                var cacheService = context.HttpContext.RequestServices.GetRequiredService<IMemoryCache>();
+                var userService = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+                var responseUser = await userService.GetUserByUserName(context.HttpContext.User.Identity.Name);
+                // là admin thì cho qua
+                if (responseUser.ResponseData.UserPosition.IsAdministrator.Value)
+                {
+                    await next();
+                }
+                else
+                {
+                    // không phải admin thì check quyền
+                    var roles = responseUser.ResponseData?.UserRoles?.Select(n => n?.Role?.RoleCode);
 
-                //string controllerName = context.ActionDescriptor.RouteValues["controller"].ToString();
-                //string actionName = context.ActionDescriptor.RouteValues["action"].ToString();
+                    string controllerName = context.ActionDescriptor.RouteValues["controller"].ToString();
+                    string actionName = context.ActionDescriptor.RouteValues["action"].ToString();
 
-                ////var identityRoles = context.HttpContext.User.Claims.Select(n => n.Value);
-                //if (!roles.Contains(controllerName + "-" + actionName))
-                //{
-                //    context.Result = new ContentResult()
-                //    {
-                //        StatusCode = 401,
-                //        ContentType = "application/json",
-                //        Content = "bạn không có quyền vào trang này !"
-                //    };
-                //    return;
-                //}
-                await next();
+                    //var identityRoles = context.HttpContext.User.Claims.Select(n => n.Value);
+                    if (!roles.Contains(controllerName + "-" + actionName))
+                    {
+                        context.Result = new ContentResult()
+                        {
+                            StatusCode = 401,
+                            ContentType = "application/json",
+                            Content = "bạn không có quyền vào trang này !"
+                        };
+                        return;
+                    }
+                    await next();
+                }
             }
         }
     }

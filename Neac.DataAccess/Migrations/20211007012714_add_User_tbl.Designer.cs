@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Neac.DataAccess;
 
 namespace Neac.DataAccess.Migrations
 {
     [DbContext(typeof(NeacDbContext))]
-    partial class NeacDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211007012714_add_User_tbl")]
+    partial class add_User_tbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,14 +33,8 @@ namespace Neac.DataAccess.Migrations
                     b.Property<int?>("MemberNumberInRoom")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MemberOnline")
-                        .HasColumnType("int");
-
                     b.Property<string>("RoomName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Status")
-                        .HasColumnType("int");
 
                     b.HasKey("MeetRoomId");
 

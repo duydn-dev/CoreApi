@@ -12,6 +12,7 @@ using Neac.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -21,17 +22,20 @@ namespace Neac.BusinessLogic.Repository
 {
     public class UserRepository : IUserRepository
     {
+        private readonly ILogRepository _logRepository;
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         public UserRepository(
-                IConfiguration configuration,
-                IUnitOfWork unitOfWork,
-                IMapper mapper,
-                IHttpContextAccessor httpContextAccessor
+            ILogRepository logRepository,
+            IConfiguration configuration,
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            IHttpContextAccessor httpContextAccessor
             )
         {
+            _logRepository = logRepository;
             _configuration = configuration;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -64,7 +68,21 @@ namespace Neac.BusinessLogic.Repository
             }
             catch (Exception ex)
             {
+                await _logRepository.ErrorAsync(ex);
                 return Response<GetListResponseModel<List<UserCreateDto>>>.CreateErrorResponse(ex);
+            }
+        }
+        public async Task<Response<User>> GetUserByUserId(Guid userId)
+        {
+            try
+            {
+                var user = await _unitOfWork.GetRepository<User>().GetByExpression(n => n.UserId == userId).FirstOrDefaultAsync();
+                return Response<User>.CreateSuccessResponse(user);
+            }
+            catch (Exception ex)
+            {
+                await _logRepository.ErrorAsync(ex);
+                return Response<User>.CreateErrorResponse(ex);
             }
         }
         public async Task<Response<UserCreateDto>> Create(UserCreateDto request)
@@ -83,6 +101,7 @@ namespace Neac.BusinessLogic.Repository
             }
             catch (Exception ex)
             {
+                await _logRepository.ErrorAsync(ex);
                 return Response<UserCreateDto>.CreateErrorResponse(ex);
             }
         }
@@ -91,12 +110,14 @@ namespace Neac.BusinessLogic.Repository
         {
             try
             {
+                await _unitOfWork.GetRepository<UserRole>().DeleteByExpression(n => n.UserId == userId);
                 await _unitOfWork.GetRepository<User>().DeleteByExpression(n => n.UserId == userId);
                 await _unitOfWork.SaveAsync();
                 return Response<bool>.CreateSuccessResponse(true);
             }
             catch (Exception ex)
             {
+                await _logRepository.ErrorAsync(ex);
                 return Response<bool>.CreateErrorResponse(ex);
             }
         }
@@ -111,6 +132,7 @@ namespace Neac.BusinessLogic.Repository
             }
             catch (Exception ex)
             {
+                await _logRepository.ErrorAsync(ex);
                 return Response<bool>.CreateErrorResponse(ex);
             }
         }
@@ -125,6 +147,7 @@ namespace Neac.BusinessLogic.Repository
             }
             catch (Exception ex)
             {
+                await _logRepository.ErrorAsync(ex);
                 return Response<UserCreateDto>.CreateErrorResponse(ex);
             }
         }
@@ -133,10 +156,11 @@ namespace Neac.BusinessLogic.Repository
         {
             try
             {
-                return Response<User>.CreateSuccessResponse(await _unitOfWork.GetRepository<User>().GetByExpression(n => n.UserName == userName).Include(n => n.UserRoles).FirstOrDefaultAsync());
+                return Response<User>.CreateSuccessResponse(await _unitOfWork.GetRepository<User>().GetByExpression(n => n.UserName == userName).Include(n => n.UserRoles).Include(n => n.UserPosition).FirstOrDefaultAsync());
             }
             catch (Exception ex)
             {
+                await _logRepository.ErrorAsync(ex);
                 return Response<User>.CreateErrorResponse(ex);
             }
         }
@@ -148,14 +172,17 @@ namespace Neac.BusinessLogic.Repository
                 var responseUser = await GetUserByUserName(request.UserName);
                 if (responseUser.ResponseData == null)
                 {
+                    await _logRepository.ErrorAsync("không tìm thấy tài khoản này !");
                     return new Response<UserLoginResponseDto>(false, 404, "không tìm thấy tài khoản này !", null);
                 }
                 if (responseUser.ResponseData.Status == UserStatus.Locked)
                 {
+                    await _logRepository.ErrorAsync("tài khoản đang bị khóa !");
                     return new Response<UserLoginResponseDto>(false, 200, "tài khoản đang bị khóa !", null);
                 }
                 if (Md5Encrypt.MD5Hash(request.PassWord) != responseUser.ResponseData.PassWord)
                 {
+                    await _logRepository.ErrorAsync("sai mật khẩu, vui lòng xem lại !");
                     return new Response<UserLoginResponseDto>(false, 404, "sai mật khẩu, vui lòng xem lại", null);
                 }
                 var token = await GenerateToken(responseUser.ResponseData);
@@ -173,12 +200,13 @@ namespace Neac.BusinessLogic.Repository
             }
             catch (Exception ex)
             {
+                await _logRepository.ErrorAsync(ex);
                 return Response<UserLoginResponseDto>.CreateErrorResponse(ex);
             }
         }
         private async Task<dynamic> GenerateToken(User user)
         {
-            DateTime expire = DateTime.Now.AddHours(Convert.ToInt32(_configuration["JWT:expireHour"]));
+            DateTime expire = DateTime.Now.AddMinutes(Convert.ToInt32(_configuration["JWT:expireHour"]));
             var authClaims = new List<Claim>
                 {
                     new Claim("UserId", user.UserId.ToString()),
@@ -203,6 +231,24 @@ namespace Neac.BusinessLogic.Repository
             userInfo.UserId = new Guid(claims.FirstOrDefault(n => n.Type == nameof(userInfo.UserId)).Value);
             userInfo.UserName = claims.FirstOrDefault(n => n.Type == ClaimTypes.Name).Value;
             return userInfo;
+        }
+
+        public async Task<Response<string>> UploadAvatar(IFormFile avatar)
+        {
+            try
+            {
+                string vitualPath = _configuration.GetSection("VitualDirectoryPath").Value + avatar.Name;
+                //using (var stream = File.Create(vitualPath))
+                //{
+                //    await avatar.CopyToAsync(stream);
+                //}
+                return Response<string>.CreateSuccessResponse(vitualPath.Replace(Path.GetPathRoot(vitualPath), ""));
+            }
+            catch(Exception ex)
+            {
+                await _logRepository.ErrorAsync(ex);
+                return Response<string>.CreateErrorResponse(ex);
+            }
         }
     }
 }

@@ -18,8 +18,8 @@ const httpOptions = {
 export class BaseService {
 
   constructor(private _http: HttpClient) { }
-  get(url: string, params: any): Observable<any> {
-    return this._http.get(`${ApiConfig.apiUrl}/${url}/${params}`, httpOptions);
+  get(url: string, params?: any): Observable<any> {
+    return this._http.get(`${ApiConfig.apiUrl}/${url}${params ? `/${params}` : ''}`, httpOptions);
   }
   getWithQuery(url: string, paramsName: string, params: string): Observable<any> {
     return this._http.get(`${ApiConfig.apiUrl}/${url}?${paramsName}=${params}`, httpOptions);

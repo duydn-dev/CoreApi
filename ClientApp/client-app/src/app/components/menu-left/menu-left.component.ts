@@ -25,11 +25,10 @@ export class MenuLeftComponent implements OnInit {
       },
       {
         name: "Hệ thống",
-        link: "/system",
         icon: "settings",
         childs:[
           {name: "Người dùng", link: "/users"},
-          {name: "Quyền hạn", link: "/users"},
+          {name: "Quyền hạn", link: "/role"},
         ]
       },
     ]

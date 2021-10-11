@@ -31,5 +31,30 @@ namespace Neac.Api.Controllers
             var request = JsonConvert.DeserializeObject<GetFilterMeetRoomDto>(filter);
             return await _meetRoomRepository.GetMeetRooms(request);
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("meet-rooms-online")]
+        public async Task<Response<List<MeetRoom>>> GetRoomsOnlineAsync([FromQuery] string filter)
+        {
+            var request = JsonConvert.DeserializeObject<GetFilterMeetRoomDto>(filter);
+            return await _meetRoomRepository.GetRoomsOnlineAsync(request);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("update-status")]
+        public async Task<Response<MeetRoom>> UpdateRoomSatusAsync([FromBody] MeetRoom request)
+        {
+            return await _meetRoomRepository.UpdateRoomSatusAsync(request);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("create-room")]
+        public async Task<Response<MeetRoom>> CreateRoomStatusAsync([FromBody] MeetRoom request)
+        {
+            return await _meetRoomRepository.CreateRoomStatusAsync(request);
+        }
     }
 }

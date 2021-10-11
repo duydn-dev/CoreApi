@@ -16,5 +16,7 @@ namespace Neac.DataAccess
         public string DomainUrl { get; set; }
         public string RoomName { get; set; }
         public int? MemberNumberInRoom { get; set; }
+        public int? MemberOnline { get; set; }
+        public int? Status { get; set; }
     }
 }

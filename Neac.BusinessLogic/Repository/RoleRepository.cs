@@ -56,6 +56,7 @@ namespace Neac.BusinessLogic.Repository
             {
                 var listRole = _unitOfWork.GetRepository<Role>().GetAll();
                 var currentUser = await _userRepository.GetIdentityUser();
+                // cập nhật lại vào danh sách role
                 foreach (var role in roles)
                 {
                     
@@ -76,7 +77,27 @@ namespace Neac.BusinessLogic.Repository
                         await _unitOfWork.GetRepository<Role>().Add(role);
                     }
                 }
+
+                // lấy ra những tài khoản quản trị
+                var adminUsers = await (from u in _unitOfWork.GetRepository<User>().GetAll()
+                                        join up in _unitOfWork.GetRepository<UserPosition>().GetAll() on u.UserPositionId equals up.UserPositionId
+                                        where up.IsAdministrator.Value
+                                        select u).ToListAsync();
+                // xóa role cũ của admin
+                await _unitOfWork.GetRepository<UserRole>().DeleteByExpression(n => adminUsers.Select(g => g.UserId).Any(g => g == n.UserId));
                 await _unitOfWork.SaveAsync();
+
+                // cập nhật role mới
+                foreach (var item in adminUsers)
+                {
+                    var adminRoles = _unitOfWork.GetRepository<Role>().GetAll().Select(n => new UserRole { RoleId = n.RoleId, UserId = item.UserId });
+                    await _unitOfWork.GetRepository<UserRole>().AddRangeAsync(adminRoles);
+                }
+
+                await _unitOfWork.SaveAsync();
+
+                // update role mới cho quản trị
+
                 return Response<bool>.CreateSuccessResponse(true); ;
             }
             catch(Exception ex)

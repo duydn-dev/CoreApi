@@ -53,11 +53,13 @@ namespace Neac.Api.Installer
             // add base service
             services.AddTransient<Func<NeacDbContext>>((provider) => () => provider.GetService<NeacDbContext>());
             services.AddAutoMapper(typeof(AutoMapperConfig).Assembly);
+            services.AddSingleton<ILogRepository, LogRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
             services.AddTransient<IMeetRoomRepository, MeetRoomRepository>();
+            services.AddTransient<IPositionRepository, PositionRepository>();
             // add user-defined service
         }
     }

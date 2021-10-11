@@ -10,6 +10,9 @@ namespace Neac.BusinessLogic.BaseRepository
     public interface IRepository<T> where T : class
     {
         Task<T> Add(T entity);
+        Task<List<T>> AddRangeAsync(List<T> entity);
+        Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entity);
+        Task<IQueryable<T>> AddRangeAsync(IQueryable<T> entity);
         Task<T> Delete(T entity);
         Task<T> Update(T entity);
         IQueryable<T> GetAll();

@@ -12,5 +12,8 @@ namespace Neac.BusinessLogic.Contracts
     public interface IMeetRoomRepository
     {
         Task<Response<List<MeetRoom>>> GetMeetRooms(GetFilterMeetRoomDto request);
+        Task<Response<List<MeetRoom>>> GetRoomsOnlineAsync(GetFilterMeetRoomDto request);
+        Task<Response<MeetRoom>> UpdateRoomSatusAsync(MeetRoom request);
+        Task<Response<MeetRoom>> CreateRoomStatusAsync(MeetRoom request);
     }
 }

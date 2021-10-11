@@ -20,4 +20,22 @@ export class UserService {
   getRoles(userId: any){
     return this._baseService.get("api/role/get-user-role",userId);
   }
+  getPositionsDropdown(){
+    return this._baseService.get("api/position/dropdown");
+  }
+  getUsers(params:any){
+    return this._baseService.getWithQuery("api/user", "request", JSON.stringify(params));
+  }
+  getUserById(userId){
+    return this._baseService.get("api/user",userId);
+  }
+  createUser(data:any){
+    return this._baseService.post("api/user/create",data);
+  }
+  editUser(data:any){
+    return this._baseService.put("api/user/update", data.userId, data);
+  }
+  removeUser(userId:any){
+    return this._baseService.delete("api/user/delete", userId);
+  }
 }

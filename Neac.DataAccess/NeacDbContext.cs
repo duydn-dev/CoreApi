@@ -18,6 +18,7 @@ namespace Neac.DataAccess
         }
         public DbSet<User> Users { get; set; }
         public DbSet<MeetRoom> MeetRooms { get; set; }
+        public DbSet<UserPosition> UserPositions { get; set; }
     }
     public class NeacDbContextFactory : IDesignTimeDbContextFactory<NeacDbContext>
     {
@@ -25,14 +26,7 @@ namespace Neac.DataAccess
         {
             var envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-            //var configuration = new ConfigurationBuilder()
-            //    .SetBasePath(Path.Combine(Directory.GetCurrentDirectory()))
-            //    .AddJsonFile("appsettings.json", optional: false)
-            //    .AddJsonFile($"appsettings.{envName}.json", optional: false)
-            //    .Build();
-
             var optionsBuilder = new DbContextOptionsBuilder<NeacDbContext>();
-            //optionsBuilder.UseSqlServer(configuration.GetConnectionString("NeacDbContext"));
             optionsBuilder.UseSqlServer(NeacDbContext.ConnectionString);
 
             return new NeacDbContext(optionsBuilder.Options);

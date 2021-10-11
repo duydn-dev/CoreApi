@@ -13,16 +13,22 @@ import {metaReducers, reducers} from '../app/ngrx/index';
 // primNG module
 import {ToastModule} from 'primeng/toast';
 import {TableModule} from 'primeng/table';
-import { MessageService } from 'primeng/api';
+import {MessageService, ConfirmationService} from 'primeng/api';
 import {PaginatorModule} from 'primeng/paginator';
+import {DialogModule} from 'primeng/dialog';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {InputTextModule} from 'primeng/inputtext';
+import {DropdownModule} from 'primeng/dropdown';
+import {FileUploadModule} from 'primeng/fileupload';
 
-
+// component
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { AuthGuard } from './guard/auth-guard';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { MenuLeftComponent } from './components/menu-left/menu-left.component';
 import { MenuTopComponent } from './components/menu-top/menu-top.component';
+import { UserComponent } from './components/users/user/user.component';
 
 
 @NgModule({
@@ -33,6 +39,7 @@ import { MenuTopComponent } from './components/menu-top/menu-top.component';
     NotfoundComponent,
     MenuLeftComponent,
     MenuTopComponent,
+    UserComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,10 +51,16 @@ import { MenuTopComponent } from './components/menu-top/menu-top.component';
     ToastModule,
     TableModule,
     PaginatorModule,
+    DialogModule,
+    ConfirmDialogModule,
+    InputTextModule,
+    DropdownModule,
+    FileUploadModule,
     StoreModule.forRoot(reducers, {metaReducers})
   ],
   providers: [
     MessageService,
+    ConfirmationService,
     AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
   ],

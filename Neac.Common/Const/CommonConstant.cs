@@ -14,4 +14,9 @@ namespace Neac.Common.Const
         public const int Locked = 0;
         public const int Working = 1;
     }
+    public static class MeetRoomStatus
+    {
+        public const int Offline = 0;
+        public const int Online = 1;
+    }
 }
