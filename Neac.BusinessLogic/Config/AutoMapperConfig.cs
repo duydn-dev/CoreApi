@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Neac.Common.Dtos;
+using Neac.Common.Dtos.PositionDtos;
 using Neac.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,14 @@ namespace Neac.BusinessLogic.Config
     {
         public AutoMapperConfig()
         {
+            CreateMap<UserCreateDto, User>().ForMember(x => x.UserRoles, g => g.Ignore());
+            CreateMap<User, UserCreateDto>();
+
+            CreateMap<MeetRoom, MeetRoom>().ForMember(x => x.MeetRoomId, g => g.Ignore());
+
+            CreateMap<UserPosition, PositonGetDropdownViewDto>();
+            CreateMap<PositonGetDropdownViewDto, UserPosition>().ForMember(x => x.Users, g => g.Ignore());
+            
         }
     }
 }

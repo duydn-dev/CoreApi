@@ -26,6 +26,24 @@ namespace Neac.BusinessLogic.BaseRepository
             return entity;
         }
 
+        public async Task<List<T>> AddRangeAsync(List<T> entity)
+        {
+            await _dbSet.AddRangeAsync(entity);
+            return entity;
+        }
+
+        public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entity)
+        {
+            await _dbSet.AddRangeAsync(entity);
+            return entity;
+        }
+
+        public async Task<IQueryable<T>> AddRangeAsync(IQueryable<T> entity)
+        {
+            await _dbSet.AddRangeAsync(entity);
+            return entity;
+        }
+
         public async Task<T> Delete(T entity)
         {
             _dbSet.Remove(entity);
